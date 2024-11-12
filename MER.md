@@ -11,6 +11,7 @@
      - `medico_id` (PK)
      - `crm`
      - `nome`
+     - `especialidade`
 
 
  - **Pedido_Exame**
@@ -20,17 +21,16 @@
      - `tipo_exame`
      
   
-  - **Agendamento_Exame**
+  - **Exame**
       - `exame_id` (PK)
       -  `data`
       -  `horário`
   
-  - **Especialidade**
-      -  `codigo_esp` (PK)
-      -  `nome_esp`
-      -  `qtde_medicos`
-      -  `medico_chefe`
-   
+  - **Receita**
+      -  `receita_id` (PK)
+      -  `data`
+      -  `tipo_receita`
+        
   - **Consulta**
       -  `codigo_con` (PK)
       -  `data`
