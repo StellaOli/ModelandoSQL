@@ -13,26 +13,32 @@
      - `nome`
 
 
- - **Agendamento_Exame**
-     - `exame_id` (PK)
+ - **Pedido_Exame**
+     - `num_pedido` (PK)
      - `data`
      - `horario`
-
-
-  - **Tipo_Exame**
-      - `nome_exame`
-      -  ``
-   
+     - `tipo_exame`
+     
+  
+  - **Agendamento_Exame**
+      - `exame_id` (PK)
+      -  `data`
+      -  `horário`
+  
   - **Especialidade**
-      - `codigo_esp` (PK)
+      -  `codigo_esp` (PK)
       -  `nome_esp`
       -  `qtde_medicos`
       -  `medico_chefe`
    
   - **Consulta**
-      - `codigo_con` (PK)
+      -  `codigo_con` (PK)
       -  `data`
       -  `horario`
-      -   `medico`
-      -   `paciente`
+   
+  - **Admin**
+      - `adm_id` (PK)
+      - `user`
+      - `senha`
+
         
