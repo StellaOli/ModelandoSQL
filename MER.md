@@ -19,9 +19,13 @@
      - `data`
      - `horario`
      - `tipo_exame`
-     
-  
+
   - **Exame**
+      - `nome_exame` (PK)
+      - `categoria`
+      - ``
+  
+  - **Agend_Exame**
       - `exame_id` (PK)
       -  `data`
       -  `horário`
@@ -30,6 +34,11 @@
       -  `receita_id` (PK)
       -  `data`
       -  `tipo_receita`
+
+  - **Remedio**
+      - `nome_remedio` (PK)
+      -  `tarja`
+      -  `dosagem`
         
   - **Consulta**
       -  `codigo_con` (PK)
