@@ -23,7 +23,7 @@
   - **Exame**
       - `nome_exame` (PK)
       - `categoria`
-      - ``
+      - `codigo_exame`
   
   - **Agend_Exame**
       - `exame_id` (PK)
