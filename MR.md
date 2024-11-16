@@ -1,4 +1,4 @@
-## Diagrama MER
+## Diagrama MR
 ```mermaid
 erDiagram
      Paciente{
@@ -65,11 +65,33 @@ erDiagram
            int senha
          }
 
-    Medico ||--|{ Paciente: o
-    Paciente ||--|{ Consulta : o
-    Remedio ||--|| Receita : o
-    Exame ||--|| Pedido_Exame : o
-    Admin ||--o{ Agend_Exame : o
+        Paciente_Consulta{
+           int paciente_id PK    
+           int codigo_con PK    
+         }
+
+        Medico_Receita{
+           int receita_id  PK
+           int medico_id PK
+        }
+
+
+    Medico ||--o{ Medico_Receita: o
+    Medico ||--|{ Pedido_Exame: o
+    Medico ||--|{ Consulta: o
+    Medico ||--|{ Agend_Exame: o
+
+    Paciente ||--|{ Agend_Exame : o
+    Paciente ||--|{ Receita : o
+    Paciente ||--|{ Paciente_Consulta : o
+
+    Receita ||--|{ Medico_Receita: o
+     
+    Consulta }|--|| Paciente_Consulta : o
+    
+    Remedio }|--|{ Receita : o
+    Exame }|--|{ Pedido_Exame : o
+    Admin ||--|{ Agend_Exame : o
     
 
 
