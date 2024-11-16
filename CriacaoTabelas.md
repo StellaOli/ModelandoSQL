@@ -52,7 +52,7 @@ CREATE TABLE "Consulta" (
 
 CREATE TABLE "Admin" (
     adm_id INT PRIMARY KEY,
-    "username" VARCHAR(15),
+    "username" VARCHAR(30),
     senha VARCHAR(30)
 );
 
