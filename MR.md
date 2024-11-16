@@ -65,13 +65,12 @@ erDiagram
            int senha
          }
 
-    MUSICA ||--|{ MUSICA_ARTISTA: o
-    ARTISTA ||--|{ MUSICA_ARTISTA : o
-    MUSICA ||--|| DISCO : o
-    DISCO ||--|| ARTISTA : o
-    USUARIO ||--o{ PLAYLIST : o
-    PLAYLIST ||--|{ PLAYLIST_MUSICA : o 
-    MUSICA ||--o{ PLAYLIST_MUSICA : o
+    Medico ||--|{ Paciente: o
+    Paciente ||--|{ Consulta : o
+    Remedio ||--|| Receita : o
+    Exame ||--|| Pedido_Exame : o
+    Admin ||--o{ Agend_Exame : o
+    
 
 
 ```
