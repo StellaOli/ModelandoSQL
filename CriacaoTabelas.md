@@ -16,7 +16,7 @@ CREATE TABLE "Medico" (
 CREATE TABLE "Pedido_Exame" (
     num_pedido INT PRIMARY KEY,
     data TIMESTAMP,
-    horario VARCHAR(4),
+    horario VARCHAR(10),
     tipo_exame VARCHAR(30)
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE "Exame" (
 CREATE TABLE "Agend_Exame" (
     exame_id INT PRIMARY KEY,
     data TIMESTAMP,
-    horario VARCHAR(4)
+    horario VARCHAR(10)
 );
 
 CREATE TABLE "Receita" (
@@ -47,7 +47,7 @@ CREATE TABLE "Remedio" (
 CREATE TABLE "Consulta" (
     codigo_con INT PRIMARY KEY,
     data TIMESTAMP,
-    horario VARCHAR(4)
+    horario VARCHAR(10)
 );
 
 CREATE TABLE "Admin" (
