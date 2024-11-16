@@ -7,14 +7,14 @@ CREATE TABLE Paciente (
 );
 
 CREATE TABLE Medico (
-    medico_id INT PRIMARY KEY,
+    medico_id SERIAL PRIMARY KEY,
     crm VARCHAR(6),
     nome_m VARCHAR(50),
     especialidade VARCHAR(50)
 );
 
 CREATE TABLE Pedido_Exame (
-    num_pedido INT PRIMARY KEY,
+    num_pedido SERIAL PRIMARY KEY,
     data TIMESTAMP,
     horario VARCHAR(30),
     tipo_exame VARCHAR(30)
@@ -27,13 +27,13 @@ CREATE TABLE Exame (
 );
 
 CREATE TABLE Agend_Exame (
-    exame_id INT PRIMARY KEY,
+    exame_id SERIAL PRIMARY KEY,
     data TIMESTAMP,
     horario VARCHAR(30)
 );
 
 CREATE TABLE Receita (
-    receita_id INT PRIMARY KEY,
+    receita_id SERIAL PRIMARY KEY,
     data TIMESTAMP,
     tipo_receita VARCHAR(30)
 );
@@ -45,13 +45,13 @@ CREATE TABLE Remedio (
 );
 
 CREATE TABLE Consulta (
-    codigo_con INT PRIMARY KEY,
+    codigo_con SERIAL PRIMARY KEY,
     data TIMESTAMP,
     horario VARCHAR(30)
 );
 
 CREATE TABLE Admin (
-    adm_id INT PRIMARY KEY,
+    adm_id SERIAL PRIMARY KEY,
     "username" VARCHAR(30),
     senha VARCHAR(30)
 );
