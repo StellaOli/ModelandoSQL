@@ -112,20 +112,25 @@ classDiagram
      
 
 
-    Paciente "1" --> "n" Agend_Exame : Atende
+    Paciente "1" --> "n" Agend_Exame : e atendido
+    Paciente "1" --> "n" Consulta : e atendido
+    Paciente "1" --> "n" Receita : Recebe
+
     Medico "1" --> "n" Pedido_Exame : Faz
-    Receita "n" --> "n" Remedio : Contém
-    Remedio "n" --> "n" Receita : Aparece
+    Medico "1" --> "n" Receita : Preescreve
+    Medico "1" --> "n" Consulta  : Atende
+    Medico "1" --> "n" Agend_Exame : Atende
 
     Admin "1" --> "n" Consulta : Agenda
     Admin "1" --> "n" Agend_Exame : Agenda 
+
+    Receita "n" --> "n" Remedio : Contém
+    Remedio "n" --> "n" Receita : Aparece
+
     Exame "n" --> "n" Pedido_Exame : Aparece
 
     Pedido_Exame "1" --> "1" Agend_Exame : Aparece 
-    Paciente "1" --> "n" Consulta : Atende
-    Medico "1" --> "n" Receita : Preescreve
-    Paciente "1" --> "n" Receita : Recebe
-    Medico "1" --> "n" Consulta  : Faz
+
     
 
 
