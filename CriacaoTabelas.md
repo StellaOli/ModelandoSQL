@@ -21,7 +21,7 @@ CREATE TABLE Pedido_Exame (
 );
 
 CREATE TABLE Exame (
-    nome_exame VARCHAR(50) PRIMARY KEY,
+    nome_exame VARCHAR(150) PRIMARY KEY,
     categoria INT,
     codigo_exame INT
 );
