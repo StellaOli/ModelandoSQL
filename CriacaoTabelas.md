@@ -1,6 +1,6 @@
 ```sql
 CREATE TABLE Paciente (
-    paciente_id INT PRIMARY KEY,
+    paciente_id SERIAL PRIMARY KEY,
     nome_p VARCHAR(50),
     data_nasc INT,
     convenio VARCHAR(50)
