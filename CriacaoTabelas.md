@@ -55,4 +55,8 @@ CREATE TABLE Admin (
     "username" VARCHAR(30),
     senha VARCHAR(30)
 );
-
+CREATE TABLE Paciente_Consulta (
+    paciente_id INT REFERENCES Paciente(paciente_id),
+    consulta_id INT REFERENCES Consulta(codigo_con),
+    PRIMARY KEY (paciente_id, consulta_id)
+);
