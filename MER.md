@@ -1,3 +1,4 @@
+# Modelo Entidade Relacional
 ## Entidades 
 
   - **Paciente**
@@ -54,6 +55,7 @@
 ## Diagrama MER
 
 ```mermaid
+
 ---
 title: Modelo Entidade Relacional
 ---
