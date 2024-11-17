@@ -33,6 +33,7 @@ erDiagram
            int codigo_con PK
            int data
            int horario
+           int status_id PK 
          }
 
        Status_Consulta{
