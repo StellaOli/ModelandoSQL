@@ -74,21 +74,22 @@ erDiagram
         }
 
 
-    Medico ||--o{ Receita: o
+    Paciente }|--|{ Paciente_Medico : o
     Medico }|--|{ Paciente_Medico: o
     Medico ||--|{ Consulta_Medico: o
+    Consulta }|--|| Consulta_Medico : o
 
-    Paciente }|--|{ Paciente_Medico : o
-    Paciente ||--|{ Receita : o
+    
     Paciente ||--|{ Paciente_Consulta : o
+    Consulta }|--|| Paciente_Consulta : o
 
     Receita }|--|{ Receita_Remedio: o
     Receita }|--|| Receita_Consulta: o
-     
-    Consulta }|--|| Paciente_Consulta : o
-    Consulta }|--|| Consulta_Medico : o
     Consulta ||--|{ Receita_Consulta : o
-    Consulta }|--|| Status_COnsulta : o 
+    Paciente ||--|{ Receita : o
+    Medico ||--o{ Receita: o
+     
+    Consulta }|--|| Status_Consulta : o 
     
     Remedio }|--|{ Receita_Remedio : o
    
