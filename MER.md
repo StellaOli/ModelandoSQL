@@ -26,7 +26,7 @@
       -  `dosagem`
         
   - **Consulta**
-      -  `codigo_con` (PK)
+      -  `consulta_id` (PK)
       -  `data`
       -  `horario`
 
@@ -75,7 +75,7 @@ classDiagram
          dosagem float(4)
      }   
        class Consulta{
-            codigo_con PK
+            consulta_id PK
             data int(8)
             horario int(6)
      }
