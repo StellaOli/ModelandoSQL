@@ -1,139 +1,140 @@
 # Código 
 
 ```python
-import psycopg2
 from faker import Faker
 import random
+import psycopg2  
+fake = Faker('pt_BR')
 
-# Conexão com o banco de dados CockroachDB
-conn = psycopg2.connect(
-    host="hard-beast-11738.6wr.aws-us-west-2.cockroachlabs.cloud",  # Substitua pelo host do seu banco
-    port="26257",  # Porta padrão do CockroachDB
-    dbname="ProjetoDB02",  # Substitua pelo nome do seu banco
-    user="luiis",  # Substitua pelo seu usuário
-    password="qqQ-TYVg8HhXKo3MYl8YXQ"  # Substitua pela sua senha
-)
-cur = conn.cursor()
+convenios_reais = ["Amil", "Bradesco Saúde", "Unimed", "SulAmérica Saúde", "NotreDame Intermédica"]
+remedios_reais = [
+    {"nome": "Paracetamol", "tarja": "Sem Tarja", "dosagem": 500},
+    {"nome": "Ibuprofeno", "tarja": "Sem Tarja", "dosagem": 400},
+    {"nome": "Losartana", "tarja": "Tarja Vermelha", "dosagem": 50},
+    {"nome": "Fluoxetina", "tarja": "Tarja Vermelha", "dosagem": 20},
+    {"nome": "Omeprazol", "tarja": "Sem Tarja", "dosagem": 20},
+]
 
-fake = Faker()
+especialidades_reais = [
+    "Cardiologia", "Pediatria", "Ortopedia", "Dermatologia", "Neurologia", 
+    "Ginecologia", "Oftalmologia", "Endocrinologia", "Psiquiatria", "Urologia"
+]
 
-# Função para inserir dados fictícios na tabela Paciente
-def insert_paciente():
-    nome_p = fake.name()
-    data_nasc = fake.date_of_birth(minimum_age=18, maximum_age=80)
-    convenio = fake.company()
-    query = f"""
-        INSERT INTO Paciente (nome_p, data_nasc, convenio)
-        VALUES ('{nome_p}', '{data_nasc}', '{convenio}');
-    """
-    cur.execute(query)
+# Configuração do banco de dados
+db_config = {
+    "dbname": "ProjetoDB02",  # Substitua pelo nome do seu banco
+    "user": "luiis",  # Substitua pelo seu usuário
+    "password": "qqQ-TYVg8HhXKo3MYl8YXQ",  # Substitua pela sua senha
+    "host": "hard-beast-11738.6wr.aws-us-west-2.cockroachlabs.cloud",  # Substitua pelo host do seu banco
+    "port": 26257,
+}
 
-# Função para inserir dados fictícios na tabela Medico
-def insert_medico():
-    crm = fake.unique.bothify(text='######')
-    nome_m = fake.name()
-    especialidade = random.choice(['Cardiologia', 'Dermatologia', 'Neurologia', 'Pediatria', 'Ortopedia'])
-    query = f"""
-        INSERT INTO Medico (crm, nome_m, especialidade)
-        VALUES ('{crm}', '{nome_m}', '{especialidade}');
-    """
-    cur.execute(query)
+def truncate(value, max_length):
+    return value[:max_length] if len(value) > max_length else value
 
-# Função para inserir dados fictícios na tabela Pedido_Exame
-def insert_pedido_exame():
-    num_pedido = fake.unique.random_int(min=1000, max=9999)
-    data = fake.date_this_decade()
-    horario = fake.time()
-    tipo_exame = random.choice(['Exame de sangue', 'Raio-X', 'Ultrassom', 'Tomografia'])
-    query = f"""
-        INSERT INTO Pedido_Exame (num_pedido, data, horario, tipo_exame)
-        VALUES ({num_pedido}, '{data}', '{horario}', '{tipo_exame}');
-    """
-    cur.execute(query)
+def populate_database():
+    try:
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor()
 
-# Função para inserir dados fictícios na tabela Exame
-def insert_exame():
-    nome_exame = fake.unique.word()  # Garante que o nome_exame seja único
-    categoria = random.choice([1, 2, 3, 4])
-    codigo_exame = fake.unique.random_int(min=1000, max=9999)
-    query = f"""
-        INSERT INTO Exame (nome_exame, categoria, codigo_exame)
-        VALUES ('{nome_exame}', {categoria}, {codigo_exame});
-    """
-    cur.execute(query)
+        paciente_ids = []
+        for _ in range(10):  # 10 pacientes
+            nome_p = truncate(fake.name(), 50)
+            data_nasc = fake.date_of_birth(minimum_age=18, maximum_age=90)
+            convenio = truncate(random.choice(convenios_reais), 50)
+            cpf = fake.cpf().replace('.', '').replace('-', '')
+            telefone = truncate(fake.phone_number(), 15)
+            cursor.execute(
+                "INSERT INTO Paciente (nome_p, data_nasc, convenio, cpf, telefone) VALUES (%s, %s, %s, %s, %s) RETURNING paciente_id",
+                (nome_p, data_nasc, convenio, cpf, telefone),
+            )
+            paciente_id = cursor.fetchone()[0]  # Recupera o id do paciente inserido
+            paciente_ids.append(paciente_id)
+            print(f"Paciente {nome_p} inserido com sucesso, ID: {paciente_id}")
 
+        medico_ids = []  # Lista para armazenar os IDs dos médicos inseridos
+        for _ in range(5):  # 5 médicos
+            nome_m = truncate(fake.name(), 50)
+            crm = str(fake.random_int(min=100000, max=999999))
+            especialidade = truncate(random.choice(especialidades_reais), 50)  # Escolhe uma especialidade real
+            cursor.execute(
+                "INSERT INTO Medico (crm, nome_m, especialidade) VALUES (%s, %s, %s) RETURNING medico_id",
+                (crm, nome_m, especialidade),
+            )
+            medico_id = cursor.fetchone()[0]  # Recupera o id do médico inserido
+            medico_ids.append(medico_id)  # Adiciona o ID à lista de médicos
+            print(f"Médico {nome_m} inserido com sucesso, ID: {medico_id}")
 
-# Função para inserir dados fictícios na tabela Agend_Exame
-def insert_agend_exame():
-    exame_id = fake.unique.random_int(min=1000, max=9999)
-    data = fake.date_this_year()
-    horario = fake.time()
-    query = f"""
-        INSERT INTO Agend_Exame (exame_id, data, horario)
-        VALUES ({exame_id}, '{data}', '{horario}');
-    """
-    cur.execute(query)
+        for remedio in remedios_reais:
+            cursor.execute(
+                "INSERT INTO Remedio (nome_remedio, tarja, dosagem) VALUES (%s, %s, %s) ON CONFLICT (nome_remedio) DO NOTHING",
+                (truncate(remedio["nome"], 50), truncate(remedio["tarja"], 30), remedio["dosagem"]),
+            )
+            print(f"Remédio {remedio['nome']} inserido com sucesso.")
 
-# Função para inserir dados fictícios na tabela Receita
-def insert_receita():
-    receita_id = fake.unique.random_int(min=1000, max=9999)
-    data = fake.date_this_year()
-    tipo_receita = random.choice(['Antibiótico', 'Anti-inflamatório', 'Analgésico', 'Antidepressivo'])
-    query = f"""
-        INSERT INTO Receita (receita_id, data, tipo_receita)
-        VALUES ({receita_id}, '{data}', '{tipo_receita}');
-    """
-    cur.execute(query)
+        consulta_ids = []
+        for _ in range(20):  # 20 consultas
+            data = fake.date_this_year()
+            horario = truncate(fake.time(), 30)
+            id_status = [1021654625661616129, 1021654625661681665, 1021654625661714433, 1021654625661747201]  # ALTERAR PARA O ID CRIADO PELO BANCO NA TABELA, RESPECTIVAMENTE -->  SELECT * FROM status_consulta;
+            status_id = random.choice(id_status)  
+            cursor.execute(
+                "INSERT INTO Consulta (data, horario, status_id) VALUES (%s, %s, %s) RETURNING codigo_con",
+                (data, horario, status_id),
+            )
+            consulta_id = cursor.fetchone()[0] 
+            consulta_ids.append(consulta_id)
+            print(f"Consulta inserida com sucesso, ID: {consulta_id}")
+            # Associando consultas a pacientes
+            paciente_id = random.choice(paciente_ids)  
+            cursor.execute(
+                "INSERT INTO Paciente_Consulta (paciente_id, consulta_id) VALUES (%s, %s)",
+                (paciente_id, consulta_id),
+            )
 
-# Função para inserir dados fictícios na tabela Remedio
-def insert_remedio():
-    nome_remedio = fake.unique.word()
-    tarja = random.choice(['Preta', 'Vermelha', 'Amarela', 'Sem tarja'])
-    dosagem = round(random.uniform(1.0, 500.0), 1)
-    query = f"""
-        INSERT INTO Remedio (nome_remedio, tarja, dosagem)
-        VALUES ('{nome_remedio}', '{tarja}', {dosagem});
-    """
-    cur.execute(query)
+            medico_id = random.choice(medico_ids) 
+            cursor.execute(
+                "INSERT INTO Consulta_Medico (consulta_id, medico_id) VALUES (%s, %s)",
+                (consulta_id, medico_id),
+            )
 
-# Função para inserir dados fictícios na tabela Consulta
-def insert_consulta():
-    codigo_con = fake.unique.random_int(min=1000, max=9999)
-    data = fake.date_this_year()
-    horario = fake.time()
-    query = f"""
-        INSERT INTO Consulta (codigo_con, data, horario)
-        VALUES ({codigo_con}, '{data}', '{horario}');
-    """
-    cur.execute(query)
+        for _ in range(15):  # 15 receitas
+            data = fake.date_this_year()
+            tipo_receita = truncate(random.choice(["Controle Especial", "Simples"]), 30)
+            cursor.execute(
+                "INSERT INTO Receita (data, tipo_receita) VALUES (%s, %s) RETURNING receita_id",
+                (data, tipo_receita),
+            )
+            receita_id = cursor.fetchone()[0]  # Recupera o id da receita inserida
+            print(f"Receita inserida com sucesso, ID: {receita_id}")
 
-# Função para inserir dados fictícios na tabela Admin
-def insert_admin():
-    adm_id = fake.unique.random_int(min=1000, max=9999)
-    username = fake.user_name()
-    senha = fake.password(length=10)
-    query = f"""
-        INSERT INTO Admin (adm_id, "username", senha)
-        VALUES ({adm_id}, '{username}', '{senha}');
-    """
-    cur.execute(query)
+            consulta_id = random.choice(consulta_ids)  # Pegando uma consulta existente
+            cursor.execute(
+                "INSERT INTO Receita_Consulta (receita_id, consulta_id) VALUES (%s, %s)",
+                (receita_id, consulta_id),
+            )
 
-# Gerando e inserindo dados fictícios (50 registros para cada tabela)
-for _ in range(50):  
-    insert_paciente()
-    insert_medico()
-    insert_pedido_exame()
-    insert_exame()
-    insert_agend_exame()
-    insert_receita()
-    insert_remedio()
-    insert_consulta()
-    insert_admin()
+            for _ in range(random.randint(1, 3)):  # De 1 a 3 remédios por receita
+                remedio = random.choice(remedios_reais)
+                quantidade = random.randint(1, 10)
+                cursor.execute(
+                    """
+                    INSERT INTO Receita_Remedio (receita_id, nome_remedio, quantidade) 
+                    VALUES (%s, %s, %s)
+                    ON CONFLICT (receita_id, nome_remedio) DO NOTHING
+                    """,
+                    (receita_id, truncate(remedio["nome"], 50), quantidade),
+                )
+            print(f"Remédios associados à receita {receita_id} com sucesso.")
+        conn.commit()
+        print("Todos os dados foram inseridos com sucesso.")
 
-conn.commit()
+    except Exception as e:
+        print(f"Erro ao inserir dados: {e}")
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
 
-cur.close()
-conn.close()
-
-print("50 dados inseridos com sucesso em cada tabela!")
-
+if __name__ == "__main__":
+    populate_database()
