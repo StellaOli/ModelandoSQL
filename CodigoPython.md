@@ -38,7 +38,7 @@ def populate_database():
         cursor = conn.cursor()
 
         paciente_ids = []
-        for _ in range(10):  # 10 pacientes
+        for _ in range(10):  
             nome_p = truncate(fake.name(), 50)
             data_nasc = fake.date_of_birth(minimum_age=18, maximum_age=90)
             convenio = truncate(random.choice(convenios_reais), 50)
@@ -48,15 +48,15 @@ def populate_database():
                 "INSERT INTO Paciente (nome_p, data_nasc, convenio, cpf, telefone) VALUES (%s, %s, %s, %s, %s) RETURNING paciente_id",
                 (nome_p, data_nasc, convenio, cpf, telefone),
             )
-            paciente_id = cursor.fetchone()[0]  # Recupera o id do paciente inserido
+            paciente_id = cursor.fetchone()[0]  
             paciente_ids.append(paciente_id)
             print(f"Paciente {nome_p} inserido com sucesso, ID: {paciente_id}")
 
-        medico_ids = []  # Lista para armazenar os IDs dos médicos inseridos
-        for _ in range(5):  # 5 médicos
+        medico_ids = [] 
+        for _ in range(5):  
             nome_m = truncate(fake.name(), 50)
             crm = str(fake.random_int(min=100000, max=999999))
-            especialidade = truncate(random.choice(especialidades_reais), 50)  # Escolhe uma especialidade real
+            especialidade = truncate(random.choice(especialidades_reais), 50)  
             cursor.execute(
                 "INSERT INTO Medico (crm, nome_m, especialidade) VALUES (%s, %s, %s) RETURNING medico_id",
                 (crm, nome_m, especialidade),
