@@ -30,7 +30,7 @@ erDiagram
          }
 
        Consulta{
-           int codigo_con PK
+           int consulta_id PK
            int data
            int horario
            int status_id PK 
@@ -50,7 +50,7 @@ erDiagram
 
         Paciente_Consulta{
            int paciente_id PK    
-           int codigo_con PK    
+           int consulta_id PK    
          }
 
         Paciente_Medico{
@@ -59,13 +59,13 @@ erDiagram
          }
 
         Consulta_Medico{
-           int codigo_con PK
+           int consulta_id PK
            int medico_id PK
          }
 
         Receita_Consulta{
            int receita_id  PK
-           int codigo_con PK
+           int consulta_id PK
         }
 
         Receita_Remedio{
