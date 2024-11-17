@@ -61,8 +61,8 @@ def populate_database():
                 "INSERT INTO Medico (crm, nome_m, especialidade) VALUES (%s, %s, %s) RETURNING medico_id",
                 (crm, nome_m, especialidade),
             )
-            medico_id = cursor.fetchone()[0]  # Recupera o id do médico inserido
-            medico_ids.append(medico_id)  # Adiciona o ID à lista de médicos
+            medico_id = cursor.fetchone()[0]  
+            medico_ids.append(medico_id)  
             print(f"Médico {nome_m} inserido com sucesso, ID: {medico_id}")
 
         for remedio in remedios_reais:
@@ -73,7 +73,7 @@ def populate_database():
             print(f"Remédio {remedio['nome']} inserido com sucesso.")
 
         consulta_ids = []
-        for _ in range(20):  # 20 consultas
+        for _ in range(20):  
             data = fake.date_this_year()
             horario = truncate(fake.time(), 30)
             id_status = [1021654625661616129, 1021654625661681665, 1021654625661714433, 1021654625661747201]  # ALTERAR PARA O ID CRIADO PELO BANCO NA TABELA, RESPECTIVAMENTE -->  SELECT * FROM status_consulta;
@@ -85,7 +85,6 @@ def populate_database():
             consulta_id = cursor.fetchone()[0] 
             consulta_ids.append(consulta_id)
             print(f"Consulta inserida com sucesso, ID: {consulta_id}")
-            # Associando consultas a pacientes
             paciente_id = random.choice(paciente_ids)  
             cursor.execute(
                 "INSERT INTO Paciente_Consulta (paciente_id, consulta_id) VALUES (%s, %s)",
@@ -98,23 +97,23 @@ def populate_database():
                 (consulta_id, medico_id),
             )
 
-        for _ in range(15):  # 15 receitas
+        for _ in range(15):  
             data = fake.date_this_year()
             tipo_receita = truncate(random.choice(["Controle Especial", "Simples"]), 30)
             cursor.execute(
                 "INSERT INTO Receita (data, tipo_receita) VALUES (%s, %s) RETURNING receita_id",
                 (data, tipo_receita),
             )
-            receita_id = cursor.fetchone()[0]  # Recupera o id da receita inserida
+            receita_id = cursor.fetchone()[0]  
             print(f"Receita inserida com sucesso, ID: {receita_id}")
 
-            consulta_id = random.choice(consulta_ids)  # Pegando uma consulta existente
+            consulta_id = random.choice(consulta_ids) 
             cursor.execute(
                 "INSERT INTO Receita_Consulta (receita_id, consulta_id) VALUES (%s, %s)",
                 (receita_id, consulta_id),
             )
 
-            for _ in range(random.randint(1, 3)):  # De 1 a 3 remédios por receita
+            for _ in range(random.randint(1, 3)):  
                 remedio = random.choice(remedios_reais)
                 quantidade = random.randint(1, 10)
                 cursor.execute(
