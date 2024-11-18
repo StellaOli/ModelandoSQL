@@ -14,6 +14,8 @@
 
 #### O campo de *id_status* está indicado no código com: ┏─══─━══─⊱✠⊰─══━─══─┓ e Setas ->
 
+#### Após isso, apenas rode o código, e ele devolverá mensagens durante as inserções;
+
 ----
 
 ```python
