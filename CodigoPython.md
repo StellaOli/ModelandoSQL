@@ -79,7 +79,7 @@ def populate_database():
             id_status = [1021654625661616129, 1021654625661681665, 1021654625661714433, 1021654625661747201]  # ALTERAR PARA O ID CRIADO PELO BANCO NA TABELA, RESPECTIVAMENTE -->  SELECT * FROM status_consulta;
             status_id = random.choice(id_status)  
             cursor.execute(
-                "INSERT INTO Consulta (data, horario, status_id) VALUES (%s, %s, %s) RETURNING codigo_con",
+                "INSERT INTO Consulta (data, horario, status_id) VALUES (%s, %s, %s) RETURNING consulta_id",
                 (data, horario, status_id),
             )
             consulta_id = cursor.fetchone()[0] 
