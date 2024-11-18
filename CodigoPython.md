@@ -1,4 +1,20 @@
-# Código 
+# Código: COMO USAR ▶️
+
+#### Resgate sua conection string do banco de dados CockRoach e substitua nos campos indicados. 
+#### Altere os numeros da variável *id_status* para os id devolvidos repectivamente na Query --> 
+
+```sql
+    
+    select status_id from status_consulta where descricao_status = 'Agendada';
+    select status_id from status_consulta where descricao_status = 'Realizada';
+    select status_id from status_consulta where descricao_status = 'Cancelada';
+    select status_id from status_consulta where descricao_status = 'Reagendada';
+    
+```
+
+#### O campo de *id_status* está indicado no código com: ┏─══─━══─⊱✠⊰─══━─══─┓ e Setas ->
+
+----
 
 ```python
 from faker import Faker
@@ -22,10 +38,10 @@ especialidades_reais = [
 
 # Configuração do banco de dados
 db_config = {
-    "dbname": "ProjetoDB02",  # Substitua pelo nome do seu banco
-    "user": "luiis",  # Substitua pelo seu usuário
-    "password": "qqQ-TYVg8HhXKo3MYl8YXQ",  # Substitua pela sua senha
-    "host": "hard-beast-11738.6wr.aws-us-west-2.cockroachlabs.cloud",  # Substitua pelo host do seu banco
+    "dbname": " ",  # Substitua pelo nome do seu banco
+    "user": " ",  # Substitua pelo seu usuário
+    "password": " ",  # Substitua pela sua senha
+    "host": " ",  # Substitua pelo host do seu banco
     "port": 26257,
 }
 
@@ -72,6 +88,8 @@ def populate_database():
             )
             print(f"Remédio {remedio['nome']} inserido com sucesso.")
 
+        #┏─══─━══─⊱✠⊰─══━─══──══─━══─⊱✠⊰─══━─══──══─━══─⊱✠⊰─══━─══──══─━══─⊱✠⊰─══━─══──══─━══─⊱✠⊰─══━─══──══─━══─⊱✠⊰─══━─══─┓
+        # ALTERAR CONSULTA STATUS 
         consulta_ids = []
         for _ in range(20):  
             data = fake.date_this_year()
@@ -137,3 +155,5 @@ def populate_database():
 
 if __name__ == "__main__":
     populate_database()
+
+```
