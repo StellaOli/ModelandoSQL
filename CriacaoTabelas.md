@@ -31,15 +31,15 @@ CREATE TABLE Remedio (
     dosagem FLOAT
 );
 
--- Tabela: Status_Consulta
+-- Tabela Status_Consulta
 CREATE TABLE Status_Consulta (
     status_id SERIAL PRIMARY KEY,
     descricao_status VARCHAR(50) NOT NULL UNIQUE
 );
 
--- Tabela Consulta
+-- Tabela Consulta (com consulta_id)
 CREATE TABLE Consulta (
-    codigo_con SERIAL PRIMARY KEY,
+    consulta_id SERIAL PRIMARY KEY,
     data TIMESTAMP,
     horario VARCHAR(30),
     status_id INT REFERENCES Status_Consulta(status_id) DEFAULT 1
@@ -53,10 +53,10 @@ CREATE TABLE Admin (
     email VARCHAR(50)
 );
 
--- Tabela Paciente_Consulta
+-- Tabela Paciente_Consulta (com consulta_id)
 CREATE TABLE Paciente_Consulta (
     paciente_id INT REFERENCES Paciente(paciente_id),
-    consulta_id INT REFERENCES Consulta(codigo_con),
+    consulta_id INT REFERENCES Consulta(consulta_id),
     PRIMARY KEY (paciente_id, consulta_id)
 );
 
@@ -67,17 +67,17 @@ CREATE TABLE Paciente_Medico (
     PRIMARY KEY (paciente_id, medico_id)
 );
 
--- Tabela Consulta_Medico
+-- Tabela Consulta_Medico (com consulta_id)
 CREATE TABLE Consulta_Medico (
-    consulta_id INT REFERENCES Consulta(codigo_con),
+    consulta_id INT REFERENCES Consulta(consulta_id),
     medico_id INT REFERENCES Medico(medico_id),
     PRIMARY KEY (consulta_id, medico_id)
 );
 
--- Tabela Receita_Consulta
+-- Tabela Receita_Consulta (com consulta_id)
 CREATE TABLE Receita_Consulta (
     receita_id INT REFERENCES Receita(receita_id),
-    consulta_id INT REFERENCES Consulta(codigo_con),
+    consulta_id INT REFERENCES Consulta(consulta_id),
     PRIMARY KEY (receita_id, consulta_id)
 );
 
