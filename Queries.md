@@ -151,7 +151,7 @@ WHERE p.convenio ILIKE 'Unimed'
 ```
 
 
-### Qual convenio tem a maior quantidade de consultas canceladas?
+### 9. Qual convenio tem a maior quantidade de consultas canceladas?
 ```sql
 SELECT convenio, COUNT(c.status_id) AS total
 FROM paciente p
