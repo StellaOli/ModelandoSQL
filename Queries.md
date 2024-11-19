@@ -111,7 +111,7 @@ ORDER BY total desc
 
 ### 6. Quais consultas o médico "Gustavo da Mota" realizou nos ultimos 6 meses?
 ```sql
-SELECT c.consulta_id, c.data , c.status_id
+SELECT c.consulta_id, c.data, c.status_id
 FROM consulta c
 
 JOIN consulta_medico cm ON c.consulta_id = cm.consulta_id
@@ -166,7 +166,7 @@ GROUP BY convenio
 
 ### 10. Quais remédios cadastrados são de cada tipo de tarja?
 ```sql
-SELECT nome_remedio,tarja
+SELECT nome_remedio, tarja
 FROM remedio r 
 
 GROUP BY tarja, nome_remedio
