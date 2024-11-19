@@ -44,126 +44,131 @@
     );
 ```
 
-### 1. Quais médicos já atenderam o paciente "João Silva"?
+### 1. Quais médicos já atenderam o paciente "Raul Montenegro"?
 
 ```sql
-select nome_m
-from medico m 
-join consulta_medico cm on m.medico_id = cm.medico_id
-join consulta c on cm.consulta_id = c.consulta_id
-join status_consulta sc on c.status_id = sc.status_id
-join paciente_consulta pc on c.consulta_id = pc.consulta_id
-join paciente p on pc.paciente_id = p.paciente_id
-where p.nome_p ilike 'João Silva' and sc.descricao_status ilike 'Realizada'
+SELECT nome_m
+FROM medico m
+ 
+JOIN consulta_medico cm ON m.medico_id = cm.medico_id
+JOIN consulta c ON cm.consulta_id = c.consulta_id
+JOIN status_consulta sc ON c.status_id = sc.status_id
+JOIN paciente_consulta pc ON c.consulta_id = pc.consulta_id
+JOIN paciente p ON pc.paciente_id = p.paciente_id
+
+WHERE p.nome_p ILIKE 'Raul Montenegro' AND sc.descricao_status ILIKE 'Realizada'
 ````
 
 ### 2. Quantas consultas existem em cada status (agendada, realizada, cancelada)?
 ```sql
-SELECT descricao_status, 
-COUNT(*) AS total
-FROM status_consulta sc 
-GROUP BY descricao_status;
+SELECT sc.descricao_status, COUNT(c.status_id) AS total_consultas
+FROM consulta c
+
+JOIN status_consulta sc ON c.status_id = sc.status_id
+GROUP BY sc.descricao_status
 ```
 
 ### 3. Qual especialidade médica tem mais consultas realizadas?
 ```sql
-select 
-especialidade,
-count(*) as total
+SELECT especialidade,
+COUNT(*) AS total
+FROM medico m 
 
-from 
-medico m 
+JOIN consulta_medico cm ON m.medico_id = cm.medico_id
+JOIN consulta c ON cm.consulta_id = c.consulta_id
+JOIN status_consulta sc ON c.status_id = sc.status_id
 
-join consulta_medico cm on m.medico_id = cm.medico_id
-join consulta c on cm.consulta_id = c.consulta_id
-join status_consulta sc on c.status_id = sc.status_id
-where sc.descricao_status ilike 'Realizada'
+WHERE sc.descricao_status ILIKE 'Realizada'
+GROUP BY especialidade
+LIMIT 1
 ```
 
 ### 4. Quais são os 5 remédios mais prescritos?
 ```sql
 SELECT nome_remedio, 
 COUNT(*) AS total 
-FROM receita_remedio rr 
+FROM receita_remedio rr
+ 
 GROUP BY nome_remedio
 ORDER BY total DESC
 LIMIT 5;
 ```
 
-### 5. Quais pacientes realizaram o maior número de consultas?
+### 5. Quantas consultas os pacientes já realizaram?
 ```sql
-select nome_p
-from paciente p 
-join paciente_consulta pc on p.consulta_id = pc.consulta_id
-join consulta c on pc.consulta_id = c.consulta_id
-join status_consulta sc on c.consulta_id = sc.consulta_id
+SELECT p.nome_p, COUNT(pc.paciente_id) AS total
+FROM paciente p
+ 
+JOIN paciente_consulta pc ON p.paciente_id = pc.paciente_id
+JOIN consulta c ON pc.consulta_id = c.consulta_id
+JOIN status_consulta sc ON c.status_id = sc.status_id
 
-select paciente_id
-count(*) as total
-from paciente_consulta pc 
-
-where sc.descricao_status ilike 'Realizada'
-order by total desc
+WHERE sc.descricao_status ILIKE 'Realizada'
+GROUP BY nome_p
+ORDER BY total desc
 ```
 
 
-### 6. Quais consultas o médico "Dra. Ana Souza" realizou no último mês?
+### 6. Quais consultas o médico "Gustavo da Mota" realizou nos ultimos 6 meses?
 ```sql
-SELECT 
-    c.consulta_id, 
-    c.data , 
-    c.status_id
-FROM consultas c
-JOIN medicos m ON c.medico_id = m.medico_id
-join status_consulta sc on c.status_id = sc.status_id
-WHERE 
-    m.nome_medico = 'Dra. Ana Souza'
-    AND c.descricao_status = 'realizada'
-    AND c.data >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
-ORDER BY 
-    c.data DESC;
+SELECT c.consulta_id, c.data , c.status_id
+FROM consulta c
+
+JOIN consulta_medico cm ON c.consulta_id = cm.consulta_id
+JOIN medico m ON cm.medico_id = m.medico_id
+JOIN status_consulta sc ON c.status_id = sc.status_id
+
+WHERE m.nome_m = 'Gustavo da Mota' 
+AND sc.descricao_status = 'Realizada' 
+AND c.data >= NOW() - INTERVAL '6 month'
+ORDER BY c.data DESC;
 ```
 
-### 7. Quais remedios a paciente "Maria Oliveira" já foi receitada?
+### 7. Quais remedios a paciente "Isadora Marques" já foi receitada?
 ```sql
-select nome_remedio
-from remedio r 
-join receita_remedio rr on r.nome_remedio = rr.nome_remedio
-join receita r on rr.receita_id = r.receita_id
-join receita_consulta rc on r.receita_id = rc.receita_id
-join consulta c on rc.consulta_id = c.consulta_id
-join paciente_consulta pc on c.consulta_id = pc.consulta_id
-join paciente p on pc.paciente_id = p.paciente_id
-where p.nome_p ilike 'Maria Oliveira'
+SELECT r.nome_remedio
+FROM remedio r
+
+JOIN receita_remedio rr ON r.nome_remedio = rr.nome_remedio
+JOIN receita re ON rr.receita_id = re.receita_id
+JOIN receita_consulta rc ON re.receita_id = rc.receita_id
+JOIN consulta c ON rc.consulta_id = c.consulta_id
+JOIN paciente_consulta pc ON c.consulta_id = pc.consulta_id
+JOIN paciente p ON pc.paciente_id = p.paciente_id
+WHERE p.nome_p ILIKE 'Isadora Marques'
 ```
 
 ### 8. Quais médicos atendem pacientes do convênio "Unimed"?
 ```sql
-SELECT DISTINCT 
-    m.id_medico, 
-    m.nome_medico
+SELECT DISTINCT m.medico_id, m.nome_m
 FROM medico m
+
 JOIN consulta_medico cm ON m.medico_id = cm.medico_id
-join consulta c on cm.consulta_id = c.consulta_id
-JOIN pacientes p ON c.paciente_id = p.paciente_id
-WHERE p.convenio ilike 'Unimed'
+JOIN consulta c ON cm.consulta_id = c.consulta_id
+JOIN paciente_consulta pc ON c.consulta_id = pc.consulta_id
+JOIN paciente p ON pc.paciente_id = p.paciente_id
+WHERE p.convenio ILIKE 'Unimed'
 ```
 
 
-### 9. Qual o número total de consultas e receitas geradas?
+### Qual convenio tem a maior quantidade de consultas canceladas?
 ```sql
-SELECT 
-(SELECT COUNT(*) FROM consulta) AS total_consultas,
-(SELECT COUNT(*) FROM receita) AS total_receitas;
+SELECT convenio, COUNT(c.status_id) AS total
+FROM paciente p
+ 
+JOIN paciente_consulta pc ON p.paciente_id = pc.paciente_id
+JOIN consulta c ON pc.consulta_id = c.consulta_id
+JOIN status_consulta sc ON c.status_id = sc.status_id
+WHERE sc.descricao_status ILIKE 'Cancelada'
+GROUP BY convenio
 ```
 
 
 ### 10. Quais remédios cadastrados são de cada tipo de tarja?
 ```sql
-select nome_remedio,tarja
+SELECT nome_remedio,tarja
+FROM remedio r 
 
-from remedio r 
-
-group by tarja, nome_remedio
-order by nome_remedio asc
+GROUP BY tarja, nome_remedio
+ORDER BY nome_remedio asc
 ```
